@@ -44,7 +44,7 @@ class CDB {
 				// Set PDO connection options
 				self::$connection->setAttribute( PDO::ATTR_CASE, PDO::CASE_LOWER);
 				self::$connection->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-				self::$connection->setAttribute( PDO::ATTR_STATEMENT_CLASS, array('CDBResult', array($this)) );
+				self::$connection->setAttribute( PDO::ATTR_STATEMENT_CLASS, array('CDBResult') );
 			
 				// MySQL connection specific parameter
 				if ( self::getDriverName() == 'mysql' )
