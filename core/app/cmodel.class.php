@@ -16,7 +16,6 @@
  */
 
  class CModel {
-	protected static $pdo_connection;
  
     // ==================================================================================
 	// Function: 	count()
