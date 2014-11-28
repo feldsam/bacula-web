@@ -94,15 +94,6 @@
 			// Getting driver name from PDO connection
 			$this->db_driver = CDB::getDriverName();
 
-			// Set PDO connection options
-			$this->db_link->setAttribute( PDO::ATTR_CASE, PDO::CASE_LOWER);
-			$this->db_link->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$this->db_link->setAttribute( PDO::ATTR_STATEMENT_CLASS, array('CDBResult', array($this)) );
-			
-			// MySQL connection specific parameter
-			if ( $driver == 'mysql' )
-				$this->db_link->setAttribute( PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-
 			// Bacula catalog selection		
 			if( $this->catalog_nb > 1 ) {
 				// Catalogs list

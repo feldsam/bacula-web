@@ -35,11 +35,20 @@ class CDB {
 	// Return:		valid PDO connection
 	// ==================================================================================
 	
-	public static function connect( $dsn, $user = null, $password = null, $options = array() ) {
+	public static function connect( $dsn, $user = null, $password = null) {
 
 		try {
             if ( is_null( self::$connection ) ) {
 				self::$connection = new PDO($dsn, $user, $password);
+
+				// Set PDO connection options
+				self::$connection->setAttribute( PDO::ATTR_CASE, PDO::CASE_LOWER);
+				self::$connection->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				self::$connection->setAttribute( PDO::ATTR_STATEMENT_CLASS, array('CDBResult', array($this)) );
+			
+				// MySQL connection specific parameter
+				if ( self::getDriverName() == 'mysql' )
+					self::$connection->setAttribute( PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 			}
         }catch (PDOException $e) {
             CErrorHandler::displayError($e);
