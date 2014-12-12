@@ -29,6 +29,16 @@ class CDB {
     }
 
 	// ==================================================================================
+	// Function: 	__destruct()
+	// Parameters: 	none
+	// Return:		none
+	// ==================================================================================
+	
+    private function __destruct() {
+        self::$connection = null;
+    }
+
+	// ==================================================================================
 	// Function: 	connect()
 	// Parameters: 	none
 	// Return:		valid PDO connection
