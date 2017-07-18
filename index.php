@@ -153,17 +153,10 @@ try {
     $pools_count = Pools_Model::count($dbSql->db_link);
 
     // Display 9 biggest pools and rest of volumes in 10th one display as Other
+    // select total volumes
     if ($pools_count > $max_pools) {
-        if (CDB::getDriverName() == 'pgsql') {
-            $limit = $max_pools . 'OFFSET ' . ($pools_count - $max_pools);
-        } else {
-            $limit = $max_pools . ',' . ($pools_count - $max_pools);
-        }
-
         $query = array( 'table' => $table_pool,
-                       'fields' => array('SUM(numvols) AS sum_vols'),
-                       'limit' => $limit,
-                       'groupby' => 'name');
+                       'fields' => array('SUM(numvols) AS sum_vols'));
         
         $result = CDBUtils::runQuery(CDBQuery::get_Select($query), $dbSql->db_link);
         $sum_vols = $result->fetch();
@@ -179,12 +172,16 @@ try {
     $query = array('table' => $table_pool, 'fields' => array('poolid,name,numvols'), 'orderby' => 'numvols DESC', 'limit' => $max_pools);
     $result = CDBUtils::runQuery(CDBQuery::get_Select($query), $dbSql->db_link);
 
+    $sum_vols_displayed = 0;
     foreach ($result as $pool) {
         $vols_by_pool[] = array($pool['name'], $pool['numvols']);
+        
+        // add numvols
+        $sum_vols_displayed += $pool['numvols'];
     }
 
     if ($pools_count > $max_pools) {
-        $vols_by_pool[] = array('Others', $sum_vols['sum_vols'], array('drilldown' => 'others'));
+        $vols_by_pool[] = array('Others', ($sum_vols['sum_vols'] - $sum_vols_displayed), array('drilldown' => 'others'));
         
         $query = array('table' => $table_pool, 'fields' => array('poolid,name,numvols'), 'orderby' => 'numvols DESC', 'offset' => $max_pools);
 	    $result = CDBUtils::runQuery(CDBQuery::get_Select($query), $dbSql->db_link);
